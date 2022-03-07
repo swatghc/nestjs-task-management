@@ -1,10 +1,10 @@
 import { Column, Entity, ObjectIdColumn } from 'typeorm';
-import { TaskStatus } from './task.model';
+import { TaskStatus } from './task-status.enum';
 
 @Entity()
 export class Task {
   @ObjectIdColumn()
-  id: string;
+  _id: string;
 
   @Column()
   title: string;
