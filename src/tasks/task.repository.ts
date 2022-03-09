@@ -1,4 +1,4 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository, ObjectLiteral, Repository } from 'typeorm';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { TaskStatus } from './task-status.enum';
@@ -17,20 +17,17 @@ export class TaskRepository extends Repository<Task> {
   }
 
   async getTasks({ status, search }: GetTasksFilterDto): Promise<Task[]> {
-    // const query = this.createQueryBuilder('task');
+    const query: ObjectLiteral = { where: {} };
+    if (status) {
+      query.where['status'] = { $eq: status };
+    }
 
-    // if (status) {
-    //   query.andWhere('task.status = :status', { status });
-    // }
-
-    // if (search) {
-    //   query.andWhere(
-    //     'LOWER(task.title) LIKE LOWER(:search) OR LOWER(task.description) LIKE LOWER(:search)',
-    //     { search: `%${search}%` },
-    //   );
-    // }
-
-    // const tasks = await query.getMany();
-    return this.find();
+    if (search) {
+      query.where['$or'] = [
+        { title: { $regex: search } },
+        { description: { $regex: search } },
+      ];
+    }
+    return await this.find(query);
   }
 }
