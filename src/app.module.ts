@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { TasksModule } from './tasks/tasks.module';
+import { AuthModule } from './auth/auth.module';
 const getConfig = (): TypeOrmModuleOptions => ({
   type: 'mongodb',
   host: 'localhost',
@@ -20,7 +21,7 @@ const getCosmosDbConfig = (): TypeOrmModuleOptions => ({
   useNewUrlParser: true,
 });
 @Module({
-  imports: [TasksModule, TypeOrmModule.forRoot(getConfig())],
+  imports: [TasksModule, TypeOrmModule.forRoot(getConfig()), AuthModule],
   providers: [],
 })
 export class AppModule {}
